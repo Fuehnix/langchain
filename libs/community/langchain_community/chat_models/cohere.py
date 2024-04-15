@@ -185,14 +185,19 @@ class ChatCohere(BaseChatModel, BaseCohere):
                 yield chunk
 
     def _get_generation_info(self, response: Any) -> Dict[str, Any]:
-        """Get the generation info from cohere API response."""
+        """Get the generation info from cohere API response.
+        Refer to the latest format and info for Cohere API response at: https://docs.cohere.com/reference/chat
+        """
         return {
             "documents": response.documents,
             "citations": response.citations,
+            "is_search_required": response.is_search_required,
             "search_results": response.search_results,
             "search_queries": response.search_queries,
-            "token_count": response.token_count,
+            "token_count": response.meta.tokens,
+            "billed_token_count": response.meta.billed_units,
         }
+
 
     def _generate(
         self,
